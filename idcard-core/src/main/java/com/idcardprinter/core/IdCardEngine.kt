@@ -66,7 +66,7 @@ class IdCardEngine {
     fun composeA4(
         frontCard: Bitmap,
         backCard: Bitmap? = null,
-        layout: PrintLayout = PrintLayout.WALLET_1TO1
+        layout: PrintLayout = PrintLayout.DOCUMENT_KYC
     ): Bitmap {
         return A4LayoutComposer.compose(frontCard, backCard, layout)
     }
@@ -77,7 +77,7 @@ class IdCardEngine {
     fun generateA4Pdf(
         frontCard: Bitmap,
         backCard: Bitmap? = null,
-        layout: PrintLayout = PrintLayout.WALLET_1TO1,
+        layout: PrintLayout = PrintLayout.DOCUMENT_KYC,
         outputFile: File
     ): File {
         val a4Bitmap = composeA4(frontCard, backCard, layout)
@@ -90,7 +90,7 @@ class IdCardEngine {
     fun generateA4Png(
         frontCard: Bitmap,
         backCard: Bitmap? = null,
-        layout: PrintLayout = PrintLayout.WALLET_1TO1,
+        layout: PrintLayout = PrintLayout.DOCUMENT_KYC,
         outputFile: File
     ): File {
         val a4Bitmap = composeA4(frontCard, backCard, layout)
