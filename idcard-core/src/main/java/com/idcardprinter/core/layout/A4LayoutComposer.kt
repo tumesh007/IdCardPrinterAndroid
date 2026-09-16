@@ -9,6 +9,8 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 import com.idcardprinter.core.model.PrintLayout
+import java.io.File
+import java.io.FileOutputStream
 
 /**
  * Composes Front and Back ID cards onto a 300 DPI single-page A4 canvas (2480 x 3508 px).
@@ -29,21 +31,88 @@ object A4LayoutComposer {
 
     fun compose(
         frontCard: Bitmap,
-        backCard: Bitmap,
-        layout: PrintLayout = PrintLayout.DOCUMENT_KYC
+        backCard: Bitmap? = null,
+        layout: PrintLayout = PrintLayout.WALLET_1TO1
     ): Bitmap {
         val a4 = Bitmap.createBitmap(A4_WIDTH_300DPI, A4_HEIGHT_300DPI, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(a4)
         canvas.drawColor(Color.WHITE)
 
-        when (layout) {
-            PrintLayout.DOCUMENT_KYC -> composeDocumentLayout(canvas, frontCard, backCard)
-            PrintLayout.WALLET_1TO1 -> composeWalletLayout(canvas, frontCard, backCard)
-            PrintLayout.ALL_IN_ONE -> composeAllInOneLayout(canvas, frontCard, backCard)
+        if (backCard == null) {
+            composeSingleCardWallet(canvas, frontCard)
+        } else {
+            when (layout) {
+                PrintLayout.DOCUMENT_KYC -> composeDocumentLayout(canvas, frontCard, backCard)
+                PrintLayout.WALLET_1TO1 -> composeWalletLayout(canvas, frontCard, backCard)
+                PrintLayout.ALL_IN_ONE -> composeAllInOneLayout(canvas, frontCard, backCard)
+            }
         }
 
         drawPageFooter(canvas)
         return a4
+    }
+
+    private fun composeSingleCardWallet(canvas: Canvas, front: Bitmap) {
+        val titlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.rgb(30, 41, 59)
+            textSize = 50f
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            textAlign = Paint.Align.CENTER
+        }
+        val subPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.rgb(100, 116, 139)
+            textSize = 28f
+            textAlign = Paint.Align.CENTER
+        }
+
+        canvas.drawText("ID CARD — 1:1 PHYSICAL TRUE SCALE PRINT", A4_WIDTH_300DPI / 2f, 220f, titlePaint)
+        canvas.drawText("Exact 1:1 Dimensions (85.6mm × 54mm) • 300 DPI • Cut along dashed guides", A4_WIDTH_300DPI / 2f, 275f, subPaint)
+
+        // Card centered
+        val startX = (A4_WIDTH_300DPI - CARD_WIDTH_1TO1) / 2
+        val startY = 950
+
+        val bmpPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+        val borderPaint = Paint().apply {
+            color = Color.rgb(203, 213, 225)
+            style = Paint.Style.STROKE
+            strokeWidth = 2f
+        }
+
+        val frontRect = Rect(startX, startY, startX + CARD_WIDTH_1TO1, startY + CARD_HEIGHT_1TO1)
+        canvas.drawBitmap(front, null, frontRect, bmpPaint)
+        canvas.drawRect(frontRect, borderPaint)
+
+        // Outer dashed cut guide
+        val cutPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.rgb(148, 163, 184)
+            strokeWidth = 3f
+            pathEffect = DashPathEffect(floatArrayOf(20f, 14f), 0f)
+            style = Paint.Style.STROKE
+        }
+        val outerCut = RectF(
+            (startX - 14).toFloat(),
+            (startY - 14).toFloat(),
+            (startX + CARD_WIDTH_1TO1 + 14).toFloat(),
+            (startY + CARD_HEIGHT_1TO1 + 14).toFloat()
+        )
+        canvas.drawRect(outerCut, cutPaint)
+
+        // 5cm Calibration Check Ruler
+        draw5cmRuler(canvas, A4_WIDTH_300DPI / 2, startY + CARD_HEIGHT_1TO1 + 350)
+    }
+
+    fun saveAsPng(bitmap: Bitmap, outputFile: File, quality: Int = 100): Boolean {
+        return try {
+            outputFile.parentFile?.mkdirs()
+            java.io.FileOutputStream(outputFile).use { out ->
+                bitmap.compress(Bitmap.CompressFormat.PNG, quality, out)
+            }
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
     }
 
     private fun composeDocumentLayout(canvas: Canvas, front: Bitmap, back: Bitmap) {

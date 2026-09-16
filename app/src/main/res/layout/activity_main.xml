@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,34 +15,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="40dp">
 
             <!-- App Header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="18dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/app_name"
                     android:textColor="@color/text_primary"
-                    android:textSize="26sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/app_tagline"
+                    android:layout_marginTop="2dp"
+                    android:text="Precision 300 DPI • Clean Lighting &amp; Paper Whitening"
                     android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
-            <!-- Card: Mode & Layout Settings -->
+            <!-- ================= FRONT CARD SLOT ================= -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,129 +58,428 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="14dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Print Output Layout"
+                        android:text="Front Side (Required)"
                         android:textColor="@color/text_primary"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
 
-                    <RadioGroup
-                        android:id="@+id/rgLayout"
+                    <!-- Front: Empty State -->
+                    <LinearLayout
+                        android:id="@+id/layoutFrontEmpty"
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/slot_dashed_bg"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Front Side Photo / Details"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="12dp"
+                            android:text="Take camera capture or select from gallery"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFrontCamera"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="📷 Camera"
+                                android:textSize="13sp"
+                                android:textAllCaps="false"
+                                android:textColor="#FFFFFF"
+                                android:backgroundTint="@color/primary"
+                                android:layout_marginEnd="10dp"
+                                app:cornerRadius="8dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFrontGallery"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="🖼 Gallery"
+                                android:textSize="13sp"
+                                android:textAllCaps="false"
+                                android:textColor="@color/text_primary"
+                                app:strokeColor="@color/primary"
+                                app:cornerRadius="8dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Front: Loaded State -->
+                    <LinearLayout
+                        android:id="@+id/layoutFrontLoaded"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp">
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
-                        <RadioButton
-                            android:id="@+id/rbWallet"
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            app:cardBackgroundColor="#0B0F19"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp">
+
+                            <ImageView
+                                android:id="@+id/ivFrontThumbnail"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="fitCenter"
+                                android:adjustViewBounds="true"
+                                android:padding="4dp" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Actions for Front -->
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:text="Wallet Cut &amp; Fold (1:1 True Size with 5cm Ruler)"
-                            android:textColor="@color/text_primary" />
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp">
 
-                        <RadioButton
-                            android:id="@+id/rbDocument"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="KYC Document Copy (A4 Upper Half)"
-                            android:textColor="@color/text_primary" />
-                    </RadioGroup>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFrontEditCrop"
+                                android:layout_width="0dp"
+                                android:layout_height="38dp"
+                                android:layout_weight="1"
+                                android:text="✂ Crop"
+                                android:textSize="12sp"
+                                android:textAllCaps="false"
+                                android:textColor="#FFFFFF"
+                                android:backgroundTint="@color/primary"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:layout_marginEnd="6dp"
+                                app:cornerRadius="8dp" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="12dp"
-                        android:background="@color/surface_variant" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFrontRotate"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="38dp"
+                                android:text="↻ Rotate"
+                                android:textSize="12sp"
+                                android:textAllCaps="false"
+                                android:textColor="@color/text_primary"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:layout_marginEnd="6dp"
+                                app:cornerRadius="8dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Sides to Capture"
-                        android:textColor="@color/text_primary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFrontCleanView"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="38dp"
+                                android:text="🔍 Clean"
+                                android:textSize="12sp"
+                                android:textAllCaps="false"
+                                android:textColor="#38BDF8"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:layout_marginEnd="6dp"
+                                app:cornerRadius="8dp" />
 
-                    <RadioGroup
-                        android:id="@+id/rgSides"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFrontRemove"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="38dp"
+                                android:text="✕"
+                                android:textSize="12sp"
+                                android:textColor="#EF4444"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                app:strokeColor="#EF4444"
+                                app:cornerRadius="8dp" />
+                        </LinearLayout>
+                    </LinearLayout>
 
-                        <RadioButton
-                            android:id="@+id/rbBothSides"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:text="Both Sides (Front &amp; Back)"
-                            android:textColor="@color/text_primary" />
-
-                        <RadioButton
-                            android:id="@+id/rbFrontOnly"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Front Side Only"
-                            android:textColor="@color/text_primary" />
-                    </RadioGroup>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="12dp"
-                        android:background="@color/surface_variant" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Card Enhancement Engine"
-                        android:textColor="@color/text_primary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchFlatField"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:checked="true"
-                        android:text="Auto Flat-fielding (Removes lighting gradients)"
-                        android:textColor="@color/text_primary" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchWhiteBalance"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="Auto White Balance (Cleans incandescent cast)"
-                        android:textColor="@color/text_primary" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Launch Scanner CTA -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLaunchScanner"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="16dp"
-                android:backgroundTint="@color/primary"
-                android:text="Start ID Card Scanner"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                app:cornerRadius="14dp"
-                app:icon="@android:drawable/ic_menu_camera"
-                app:iconGravity="textStart" />
-
-            <!-- Result Card (shown after scanning) -->
+            <!-- ================= BACK CARD SLOT (OPTIONAL) ================= -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardResult"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/surface_variant"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Back Side (Optional)"
+                            android:textColor="@color/text_primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Optional"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Address &amp; barcode side. If omitted, only front side is printed."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                    <!-- Back: Empty State -->
+                    <LinearLayout
+                        android:id="@+id/layoutBackEmpty"
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/slot_dashed_optional_bg"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Add Back Side (Optional)"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnBackCamera"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="38dp"
+                                android:text="📷 Camera"
+                                android:textSize="13sp"
+                                android:textAllCaps="false"
+                                android:textColor="@color/text_primary"
+                                android:layout_marginEnd="10dp"
+                                app:cornerRadius="8dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnBackGallery"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="38dp"
+                                android:text="🖼 Gallery"
+                                android:textSize="13sp"
+                                android:textAllCaps="false"
+                                android:textColor="@color/text_primary"
+                                app:cornerRadius="8dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Back: Loaded State -->
+                    <LinearLayout
+                        android:id="@+id/layoutBackLoaded"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            app:cardBackgroundColor="#0B0F19"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp">
+
+                            <ImageView
+                                android:id="@+id/ivBackThumbnail"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="fitCenter"
+                                android:adjustViewBounds="true"
+                                android:padding="4dp" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Actions for Back -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnBackEditCrop"
+                                android:layout_width="0dp"
+                                android:layout_height="38dp"
+                                android:layout_weight="1"
+                                android:text="✂ Crop"
+                                android:textSize="12sp"
+                                android:textAllCaps="false"
+                                android:textColor="#FFFFFF"
+                                android:backgroundTint="@color/primary"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:layout_marginEnd="6dp"
+                                app:cornerRadius="8dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnBackRotate"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="38dp"
+                                android:text="↻ Rotate"
+                                android:textSize="12sp"
+                                android:textAllCaps="false"
+                                android:textColor="@color/text_primary"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:layout_marginEnd="6dp"
+                                app:cornerRadius="8dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnBackCleanView"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="38dp"
+                                android:text="🔍 Clean"
+                                android:textSize="12sp"
+                                android:textAllCaps="false"
+                                android:textColor="#38BDF8"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:layout_marginEnd="6dp"
+                                app:cornerRadius="8dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnBackRemove"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="38dp"
+                                android:text="✕"
+                                android:textSize="12sp"
+                                android:textColor="#EF4444"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                app:strokeColor="#EF4444"
+                                app:cornerRadius="8dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ================= PRIMARY PRINT & EXPORT BUTTONS ================= -->
+
+            <!-- Print Directly -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPrintDirect"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:text="🖨 Print Directly (Wireless A4)"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/secondary"
+                android:layout_marginBottom="12dp"
+                app:cornerRadius="12dp" />
+
+            <!-- PDF and PNG Share/Save Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSavePdf"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="📄 Save / Share PDF"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:backgroundTint="@color/primary"
+                    android:layout_marginEnd="6dp"
+                    app:cornerRadius="10dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSavePng"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="🖼 Save / Share PNG"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:layout_marginStart="6dp"
+                    app:strokeColor="@color/primary"
+                    app:cornerRadius="10dp" />
+            </LinearLayout>
+
+            <!-- Full Page Preview Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPreviewPage"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:text="👁 Full A4 Page Preview"
+                android:textAllCaps="false"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:layout_marginBottom="18dp"
+                app:cornerRadius="10dp"
+                app:strokeColor="@color/surface_variant" />
+
+            <!-- ================= OUTPUT TRACKER CARD ================= -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardOutputTracker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:visibility="gone"
                 app:cardBackgroundColor="@color/surface"
                 app:cardCornerRadius="16dp"
@@ -196,129 +496,108 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Scan Completed Successfully!"
+                        android:text="Exported 300 DPI Outputs"
                         android:textColor="@color/secondary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvResultPdfPath"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:ellipsize="middle"
-                        android:singleLine="true"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
-                        tools:text="Saved: /storage/.../id_card_wallet_171000.pdf" />
-
-                    <!-- Thumbnail Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-
-                        <ImageView
-                            android:id="@+id/ivResultFront"
-                            android:layout_width="0dp"
-                            android:layout_height="110dp"
-                            android:layout_marginEnd="6dp"
-                            android:layout_weight="1"
-                            android:background="@color/surface_variant"
-                            android:scaleType="fitCenter" />
-
-                        <ImageView
-                            android:id="@+id/ivResultBack"
-                            android:layout_width="0dp"
-                            android:layout_height="110dp"
-                            android:layout_marginStart="6dp"
-                            android:layout_weight="1"
-                            android:background="@color/surface_variant"
-                            android:scaleType="fitCenter" />
-                    </LinearLayout>
-
-                    <!-- Action Buttons -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnSharePdf"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_marginEnd="6dp"
-                            android:layout_weight="1"
-                            android:text="Share PDF"
-                            android:textColor="@color/text_primary"
-                            app:cornerRadius="10dp"
-                            app:strokeColor="@color/surface_variant" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnPrintPdf"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_marginStart="6dp"
-                            android:layout_weight="1"
-                            android:backgroundTint="@color/secondary"
-                            android:text="Print Direct"
-                            android:textColor="#FFFFFF"
-                            app:cornerRadius="10dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Developer Integration Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@color/surface"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/surface_variant"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Integrating Into Another App?"
-                        android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Include :idcard-ui or idcard-ui.aar and launch with 1 line of code:"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
-
-                    <TextView
+                    <!-- PDF item -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:background="#090D16"
-                        android:fontFamily="monospace"
-                        android:padding="10dp"
-                        android:text="val contract = IdCardScannerContract()\nval scanLauncher = registerForActivityResult(contract) { result ->\n    if (result.success) {\n        // result.pdfFile, result.frontCardBitmap, etc.\n    }\n}\nscanLauncher.launch(IdCardScannerConfig(...))"
-                        android:textColor="#60A5FA"
-                        android:textSize="11sp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tvPdfTrack"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="📄 PDF: id_card_print.pdf"
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp"
+                            android:ellipsize="middle"
+                            android:singleLine="true" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnOpenPdf"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="Open"
+                            android:textColor="@color/primary"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp" />
+                    </LinearLayout>
+
+                    <!-- PNG item -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tvPngTrack"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="🖼 PNG: id_card_print.png"
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp"
+                            android:ellipsize="middle"
+                            android:singleLine="true" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnOpenPng"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="Open"
+                            android:textColor="@color/primary"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <!-- Global Loading Overlay -->
+    <FrameLayout
+        android:id="@+id/globalLoadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B3000000"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/slot_dashed_bg"
+            android:padding="28dp">
+
+            <ProgressBar
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:indeterminate="true"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tvGlobalLoadingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Composing 300 DPI A4 Page..."
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>

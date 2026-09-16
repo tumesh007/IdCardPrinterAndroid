@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/idcard_background">
+
+    <!-- Top Toolbar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:background="@color/idcard_surface">
+
+        <ImageButton
+            android:id="@+id/btnClose"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="@color/idcard_text_primary"
+            android:contentDescription="Close" />
+
+        <TextView
+            android:id="@+id/tvToolbarTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:text="Crop ID Card"
+            android:textColor="@color/idcard_text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDone"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:text="Done ✓"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:backgroundTint="@color/idcard_accent"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
+
+    <!-- Subtitle Tip -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#151D2A"
+        android:paddingVertical="6dp"
+        android:paddingHorizontal="16dp"
+        android:text="Drag the 4 corner handles to align with the card's boundary"
+        android:textColor="@color/idcard_text_secondary"
+        android:textSize="12sp"
+        android:gravity="center" />
+
+    <!-- Main Viewport for CropView -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#05080E">
+
+        <com.idcardprinter.ui.crop.CardCropView
+            android:id="@+id/cropView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Loading Overlay -->
+        <FrameLayout
+            android:id="@+id/loadingOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#B3000000"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/idcard_dialog_bg"
+                android:padding="24dp">
+
+                <ProgressBar
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:indeterminate="true"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:id="@+id/tvLoadingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Processing Card..."
+                    android:textColor="@color/idcard_text_primary"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </FrameLayout>
+    </FrameLayout>
+
+    <!-- Bottom Feature Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:background="@color/idcard_surface"
+        android:gravity="center"
+        android:weightSum="4">
+
+        <!-- Rotate Button -->
+        <LinearLayout
+            android:id="@+id/btnRotate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_rotate"
+                app:tint="@color/idcard_text_primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Rotate 90°"
+                android:textColor="@color/idcard_text_primary"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- Auto Detect Button -->
+        <LinearLayout
+            android:id="@+id/btnAutoDetect"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_compass"
+                app:tint="@color/idcard_accent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Auto-Detect"
+                android:textColor="@color/idcard_text_primary"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- Clean Card Preview Button -->
+        <LinearLayout
+            android:id="@+id/btnCleanPreview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="#38BDF8" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Clean Card"
+                android:textColor="@color/idcard_text_primary"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- Reset Button -->
+        <LinearLayout
+            android:id="@+id/btnResetCrop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_revert"
+                app:tint="@color/idcard_text_secondary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Reset"
+                android:textColor="@color/idcard_text_secondary"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

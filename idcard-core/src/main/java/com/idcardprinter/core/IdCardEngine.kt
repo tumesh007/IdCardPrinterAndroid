@@ -61,26 +61,40 @@ class IdCardEngine {
     }
 
     /**
-     * Composes Front and Back cards onto a 300 DPI single-page A4 Bitmap.
+     * Composes Front and optional Back card onto a 300 DPI single-page A4 Bitmap.
      */
     fun composeA4(
         frontCard: Bitmap,
-        backCard: Bitmap,
-        layout: PrintLayout = PrintLayout.DOCUMENT_KYC
+        backCard: Bitmap? = null,
+        layout: PrintLayout = PrintLayout.WALLET_1TO1
     ): Bitmap {
         return A4LayoutComposer.compose(frontCard, backCard, layout)
     }
 
     /**
-     * Composes Front and Back cards and outputs a print-ready A4 PDF.
+     * Composes Front and optional Back card and outputs a print-ready A4 PDF.
      */
     fun generateA4Pdf(
         frontCard: Bitmap,
-        backCard: Bitmap,
-        layout: PrintLayout = PrintLayout.DOCUMENT_KYC,
+        backCard: Bitmap? = null,
+        layout: PrintLayout = PrintLayout.WALLET_1TO1,
         outputFile: File
     ): File {
         val a4Bitmap = composeA4(frontCard, backCard, layout)
         return PdfGenerator.generatePdf(a4Bitmap, outputFile)
+    }
+
+    /**
+     * Composes Front and optional Back card and outputs a high-res 300 DPI A4 PNG.
+     */
+    fun generateA4Png(
+        frontCard: Bitmap,
+        backCard: Bitmap? = null,
+        layout: PrintLayout = PrintLayout.WALLET_1TO1,
+        outputFile: File
+    ): File {
+        val a4Bitmap = composeA4(frontCard, backCard, layout)
+        A4LayoutComposer.saveAsPng(a4Bitmap, outputFile)
+        return outputFile
     }
 }

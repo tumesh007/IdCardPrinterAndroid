@@ -9,6 +9,11 @@
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".crop.CardCropActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

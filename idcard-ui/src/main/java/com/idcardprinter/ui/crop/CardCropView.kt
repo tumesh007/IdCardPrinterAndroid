@@ -124,9 +124,14 @@ class CardCropView @JvmOverloads constructor(
         val w = bitmap.width
         val h = bitmap.height
         this.corners = initialCorners ?: CardQuad.defaultFor(w, h)
+        if (width > 0 && height > 0) {
+            calculateImageScale(width, height)
+        }
         requestLayout()
         invalidate()
     }
+
+    fun getImageBitmap(): Bitmap? = imageBitmap
 
     fun setCorners(quad: CardQuad) {
         this.corners = quad
@@ -148,8 +153,13 @@ class CardCropView @JvmOverloads constructor(
         val bmp = imageBitmap ?: return
         if (viewW <= 0 || viewH <= 0) return
 
-        val scaleX = viewW.toFloat() / bmp.width
-        val scaleY = viewH.toFloat() / bmp.height
+        // Inset padding so corner handles and badges are never clipped at screen edges
+        val padding = dpToPx(32f)
+        val availW = max(10f, viewW - padding * 2)
+        val availH = max(10f, viewH - padding * 2)
+
+        val scaleX = availW / bmp.width
+        val scaleY = availH / bmp.height
         imgScale = min(scaleX, scaleY)
 
         val dispW = bmp.width * imgScale
@@ -172,6 +182,10 @@ class CardCropView @JvmOverloads constructor(
         super.onDraw(canvas)
         val bmp = imageBitmap ?: return
         val quad = corners ?: return
+
+        if (imgScale <= 0.0001f && width > 0 && height > 0) {
+            calculateImageScale(width, height)
+        }
 
         // 1. Draw base image scaled & centered
         val matrix = Matrix().apply {

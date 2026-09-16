@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/idcard_dialog_bg"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tvPreviewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Clean Card Preview"
+        android:textColor="@color/idcard_text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Lighting flat-fielded &amp; background whitened"
+        android:textColor="@color/idcard_text_secondary"
+        android:textSize="12sp" />
+
+    <!-- Card Container -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="#151D2A"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#334155"
+        app:strokeWidth="1.5dp">
+
+        <ImageView
+            android:id="@+id/ivCleanCard"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:padding="8dp" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCloseDialog"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Looks Good! Keep Cropping"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="@color/idcard_primary"
+        app:cornerRadius="10dp" />
+
+</LinearLayout>
