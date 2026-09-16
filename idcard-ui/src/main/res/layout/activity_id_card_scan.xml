@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/idcard_background">
+
+    <!-- Header Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/idcard_surface"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:titleTextColor="@color/idcard_text_primary" />
+
+    <!-- Step / Instruction Banner -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:background="#151D2A"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvStepIndicator"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/idcard_front_title"
+            android:textColor="@color/idcard_text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnRotate"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/idcard_rotate"
+            android:textSize="12sp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_marginEnd="6dp" />
+
+        <Button
+            android:id="@+id/btnAutoDetect"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/idcard_auto_detect"
+            android:textSize="12sp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_marginEnd="6dp" />
+
+        <Button
+            android:id="@+id/btnCleanPreview"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/idcard_clean_preview"
+            android:textSize="12sp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+    </LinearLayout>
+
+    <!-- Main Content Frame -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- Crop View -->
+        <com.idcardprinter.ui.crop.CardCropView
+            android:id="@+id/cropView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <!-- Empty State (Prompt to pick/capture) -->
+        <LinearLayout
+            android:id="@+id/emptyStateLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/tvEmptyTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Photo Loaded"
+                android:textColor="@color/idcard_text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/tvEmptySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Take a photo with your camera or choose from gallery"
+                android:textColor="@color/idcard_text_secondary"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:layout_marginBottom="24dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnCaptureCamera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="📷 Camera"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="@color/idcard_primary"
+                    android:layout_marginEnd="12dp" />
+
+                <Button
+                    android:id="@+id/btnPickGallery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="🖼 Gallery"
+                    android:textColor="@color/idcard_text_primary"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Loading / Progress Overlay -->
+        <FrameLayout
+            android:id="@+id/loadingOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#99000000"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/idcard_dialog_bg"
+                android:padding="24dp">
+
+                <ProgressBar
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:indeterminate="true"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:id="@+id/tvLoadingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Processing Card..."
+                    android:textColor="@color/idcard_text_primary"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </FrameLayout>
+    </FrameLayout>
+
+    <!-- Bottom Navigation Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:background="@color/idcard_surface"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/btnRetake"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="Retake"
+            android:textColor="@color/idcard_text_primary"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:visibility="gone"
+            android:layout_marginEnd="12dp" />
+
+        <Button
+            android:id="@+id/btnNextOrDone"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/idcard_btn_next"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="@color/idcard_primary"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

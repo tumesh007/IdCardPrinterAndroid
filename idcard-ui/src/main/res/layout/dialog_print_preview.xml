@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/idcard_background"
+    android:padding="16dp">
+
+    <!-- Title Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/idcard_preview_title"
+            android:textColor="@color/idcard_text_primary"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnClosePreview"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="✕ Close"
+            android:textSize="12sp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textColor="@color/idcard_text_secondary" />
+    </LinearLayout>
+
+    <!-- Layout Selector Radio Group -->
+    <RadioGroup
+        android:id="@+id/rgLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="12dp">
+
+        <RadioButton
+            android:id="@+id/rbDocument"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="KYC Copy"
+            android:checked="true"
+            android:textColor="@color/idcard_text_primary"
+            android:layout_marginEnd="12dp" />
+
+        <RadioButton
+            android:id="@+id/rbWallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wallet 1:1"
+            android:textColor="@color/idcard_text_primary"
+            android:layout_marginEnd="12dp" />
+
+        <RadioButton
+            android:id="@+id/rbAllInOne"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All-In-One"
+            android:textColor="@color/idcard_text_primary" />
+    </RadioGroup>
+
+    <!-- Preview Container (Card preview on light shadow background) -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#1E293B"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/ivA4Preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:contentDescription="A4 Print Preview" />
+    </FrameLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/btnDirectPrint"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="🖨 Direct Print"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="@color/idcard_accent"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnSavePdf"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="📄 Save PDF"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="@color/idcard_primary" />
+    </LinearLayout>
+
+</LinearLayout>

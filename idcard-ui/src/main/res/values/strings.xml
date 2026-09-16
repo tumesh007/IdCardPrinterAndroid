@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="idcard_lib_name">ID Card Scanner</string>
+    <string name="idcard_front_title">Front Side (Photo &amp; Details)</string>
+    <string name="idcard_back_title">Back Side (Address &amp; Barcode)</string>
+    <string name="idcard_crop_instruction">Drag the 4 corners to align with card edges</string>
+    <string name="idcard_auto_detect">Auto-Detect</string>
+    <string name="idcard_rotate">Rotate</string>
+    <string name="idcard_clean_preview">Clean Preview</string>
+    <string name="idcard_btn_camera">Camera</string>
+    <string name="idcard_btn_gallery">Gallery</string>
+    <string name="idcard_btn_next">Next Side →</string>
+    <string name="idcard_btn_generate">Generate A4 Print</string>
+    <string name="idcard_preview_title">Print Preview (A4 Single Page)</string>
+    <string name="idcard_btn_print">Direct Print</string>
+    <string name="idcard_btn_save_pdf">Save PDF</string>
+</resources>
