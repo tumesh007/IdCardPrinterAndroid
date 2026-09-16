@@ -83,6 +83,22 @@ data class CardQuad(
         bottomLeft = bottomLeft.scaled(scaleX, scaleY)
     )
 
+    fun rotated90(imgW: Int, imgH: Int): CardQuad {
+        // Point (x, y) becomes (imgH - y, x)
+        val pTL = CardPoint(imgH - topLeft.y, topLeft.x)
+        val pTR = CardPoint(imgH - topRight.y, topRight.x)
+        val pBR = CardPoint(imgH - bottomRight.y, bottomRight.x)
+        val pBL = CardPoint(imgH - bottomLeft.y, bottomLeft.x)
+        
+        // Re-assign corners so TL is visually Top-Left
+        return CardQuad(
+            topLeft = pBL,
+            topRight = pTL,
+            bottomRight = pTR,
+            bottomLeft = pBR
+        )
+    }
+
     companion object {
         /**
          * Creates a default inset rectangular boundary for an image of given dimensions.

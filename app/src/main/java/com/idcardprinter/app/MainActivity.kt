@@ -114,11 +114,7 @@ class MainActivity : AppCompatActivity() {
                 backQuad = result.quad
                 updateBackCardUi()
             }
-            // Invalidate previously cached A4 exports
-            latestA4Bitmap = null
-            latestPdfFile = null
-            latestPngFile = null
-            binding.cardOutputTracker.visibility = View.GONE
+            invalidateCaches()
         }
     }
 
@@ -158,6 +154,7 @@ class MainActivity : AppCompatActivity() {
             frontRawPath = null
             frontQuad = null
             frontEnhanced = null
+            invalidateCaches()
             updateFrontCardUi()
         }
 
@@ -186,6 +183,7 @@ class MainActivity : AppCompatActivity() {
             backRawPath = null
             backQuad = null
             backEnhanced = null
+            invalidateCaches()
             updateBackCardUi()
         }
 
@@ -291,6 +289,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun invalidateCaches() {
+        latestA4Bitmap = null
+        latestPdfFile = null
+        latestPngFile = null
+        binding.cardOutputTracker.visibility = View.GONE
+    }
+
     private fun rotateCardInSlot(side: CardSide) {
         val path = if (side == CardSide.FRONT) frontRawPath else backRawPath ?: return
         showLoading("Rotating card...")
@@ -303,10 +308,13 @@ class MainActivity : AppCompatActivity() {
             FileOutputStream(file).use { out ->
                 rotated.compress(Bitmap.CompressFormat.JPEG, 95, out)
             }
-            val newQuad = engine.detectCorners(rotated)
+            
+            val currentQuad = if (side == CardSide.FRONT) frontQuad else backQuad
+            val newQuad = currentQuad?.rotated90(bmp.width, bmp.height) ?: engine.detectCorners(rotated)
 
             withContext(Dispatchers.Main) {
                 hideLoading()
+                invalidateCaches()
                 if (side == CardSide.FRONT) {
                     frontRawPath = file.absolutePath
                     frontQuad = newQuad

@@ -153,7 +153,8 @@ class CardCropActivity : AppCompatActivity() {
                 rotated.compress(Bitmap.CompressFormat.JPEG, 95, out)
             }
 
-            val newCorners = engine.detectCorners(rotated)
+            val currentQuad = binding.cropView.getCorners()
+            val newCorners = currentQuad?.rotated90(bmp.width, bmp.height) ?: engine.detectCorners(rotated)
 
             withContext(Dispatchers.Main) {
                 hideLoading()

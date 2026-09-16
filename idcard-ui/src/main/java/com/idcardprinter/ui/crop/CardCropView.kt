@@ -277,6 +277,28 @@ class CardCropView @JvmOverloads constructor(
         canvas.drawCircle(loupeCenterX, loupeCenterY, dpToPx(3f), crosshairPaint)
     }
 
+    private fun distToSegment(px: Float, py: Float, x1: Float, y1: Float, x2: Float, y2: Float): Float {
+        val l2 = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)
+        if (l2 == 0f) return hypot(px - x1, py - y1)
+        var t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2
+        t = max(0f, min(1f, t))
+        return hypot(px - (x1 + t * (x2 - x1)), py - (y1 + t * (y2 - y1)))
+    }
+
+    private fun isPointInPolygon(px: Float, py: Float, points: List<Pair<Float, Float>>): Boolean {
+        var c = false
+        var j = points.size - 1
+        for (i in points.indices) {
+            val (xi, yi) = points[i]
+            val (xj, yj) = points[j]
+            if (((yi > py) != (yj > py)) && (px < (xj - xi) * (py - yi) / (yj - yi) + xi)) {
+                c = !c
+            }
+            j = i
+        }
+        return c
+    }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val quad = corners ?: return false
 
@@ -292,15 +314,43 @@ class CardCropView @JvmOverloads constructor(
                     imgToView(quad.bottomLeft)
                 )
 
-                // Find closest corner within touch target
                 var bestDist = touchRadiusPx
                 activeHandleIndex = -1
 
+                // 1. Check Corners (0, 1, 2, 3)
                 for (i in points.indices) {
                     val d = hypot(tx - points[i].first, ty - points[i].second)
                     if (d < bestDist) {
                         bestDist = d
                         activeHandleIndex = i
+                    }
+                }
+
+                // 2. Check Edges (4: Top, 5: Right, 6: Bottom, 7: Left)
+                if (activeHandleIndex == -1) {
+                    val edges = listOf(
+                        Pair(0, 1), // Top
+                        Pair(1, 2), // Right
+                        Pair(2, 3), // Bottom
+                        Pair(3, 0)  // Left
+                    )
+                    bestDist = touchRadiusPx
+                    for (i in edges.indices) {
+                        val (idx1, idx2) = edges[i]
+                        val (x1, y1) = points[idx1]
+                        val (x2, y2) = points[idx2]
+                        val d = distToSegment(tx, ty, x1, y1, x2, y2)
+                        if (d < bestDist) {
+                            bestDist = d
+                            activeHandleIndex = 4 + i
+                        }
+                    }
+                }
+
+                // 3. Check Center (8: Center Box)
+                if (activeHandleIndex == -1) {
+                    if (isPointInPolygon(tx, ty, points)) {
+                        activeHandleIndex = 8
                     }
                 }
 
@@ -317,15 +367,47 @@ class CardCropView @JvmOverloads constructor(
 
             MotionEvent.ACTION_MOVE -> {
                 if (isDragging && activeHandleIndex != -1) {
+                    val dx = event.x - lastTouchX
+                    val dy = event.y - lastTouchY
                     lastTouchX = event.x
                     lastTouchY = event.y
 
-                    val imgPoint = viewToImg(event.x, event.y)
+                    // Convert screen dx, dy to image dx, dy
+                    val imgDx = dx / imgScale
+                    val imgDy = dy / imgScale
+
                     val updated = when (activeHandleIndex) {
-                        0 -> quad.copy(topLeft = imgPoint)
-                        1 -> quad.copy(topRight = imgPoint)
-                        2 -> quad.copy(bottomRight = imgPoint)
-                        3 -> quad.copy(bottomLeft = imgPoint)
+                        // Corners
+                        0 -> quad.copy(topLeft = viewToImg(event.x, event.y))
+                        1 -> quad.copy(topRight = viewToImg(event.x, event.y))
+                        2 -> quad.copy(bottomRight = viewToImg(event.x, event.y))
+                        3 -> quad.copy(bottomLeft = viewToImg(event.x, event.y))
+                        
+                        // Edges
+                        4 -> quad.copy(
+                            topLeft = CardPoint(quad.topLeft.x + imgDx, quad.topLeft.y + imgDy),
+                            topRight = CardPoint(quad.topRight.x + imgDx, quad.topRight.y + imgDy)
+                        )
+                        5 -> quad.copy(
+                            topRight = CardPoint(quad.topRight.x + imgDx, quad.topRight.y + imgDy),
+                            bottomRight = CardPoint(quad.bottomRight.x + imgDx, quad.bottomRight.y + imgDy)
+                        )
+                        6 -> quad.copy(
+                            bottomRight = CardPoint(quad.bottomRight.x + imgDx, quad.bottomRight.y + imgDy),
+                            bottomLeft = CardPoint(quad.bottomLeft.x + imgDx, quad.bottomLeft.y + imgDy)
+                        )
+                        7 -> quad.copy(
+                            bottomLeft = CardPoint(quad.bottomLeft.x + imgDx, quad.bottomLeft.y + imgDy),
+                            topLeft = CardPoint(quad.topLeft.x + imgDx, quad.topLeft.y + imgDy)
+                        )
+                        
+                        // Center Box
+                        8 -> quad.copy(
+                            topLeft = CardPoint(quad.topLeft.x + imgDx, quad.topLeft.y + imgDy),
+                            topRight = CardPoint(quad.topRight.x + imgDx, quad.topRight.y + imgDy),
+                            bottomRight = CardPoint(quad.bottomRight.x + imgDx, quad.bottomRight.y + imgDy),
+                            bottomLeft = CardPoint(quad.bottomLeft.x + imgDx, quad.bottomLeft.y + imgDy)
+                        )
                         else -> quad
                     }
 
