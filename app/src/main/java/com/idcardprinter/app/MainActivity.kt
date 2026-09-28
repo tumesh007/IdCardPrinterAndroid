@@ -263,7 +263,8 @@ class MainActivity : AppCompatActivity() {
                 imageUri = imageUri,
                 initialQuad = initialQuad,
                 title = title,
-                isFront = isFront
+                isFront = isFront,
+                isDocumentMode = isDocumentMode
             )
         )
     }

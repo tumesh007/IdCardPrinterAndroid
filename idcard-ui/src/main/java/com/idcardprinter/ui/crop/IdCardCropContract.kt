@@ -13,7 +13,8 @@ data class CropInput(
     val imageUri: Uri? = null,
     val initialQuad: CardQuad? = null,
     val title: String = "Crop ID Card",
-    val isFront: Boolean = true
+    val isFront: Boolean = true,
+    val isDocumentMode: Boolean = false
 ) : Serializable
 
 data class CropResult(
@@ -31,6 +32,7 @@ class IdCardCropContract : ActivityResultContract<CropInput, CropResult>() {
             input.initialQuad?.let { putExtra(CardCropActivity.EXTRA_INITIAL_QUAD, it) }
             putExtra(CardCropActivity.EXTRA_TITLE, input.title)
             putExtra(CardCropActivity.EXTRA_IS_FRONT, input.isFront)
+            putExtra(CardCropActivity.EXTRA_IS_DOCUMENT_MODE, input.isDocumentMode)
         }
     }
 

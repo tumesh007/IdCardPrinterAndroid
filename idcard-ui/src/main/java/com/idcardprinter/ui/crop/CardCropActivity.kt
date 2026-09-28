@@ -34,6 +34,7 @@ class CardCropActivity : AppCompatActivity() {
         const val EXTRA_INITIAL_QUAD = "extra_initial_quad"
         const val EXTRA_TITLE = "extra_title"
         const val EXTRA_IS_FRONT = "extra_is_front"
+        const val EXTRA_IS_DOCUMENT_MODE = "extra_is_document_mode"
 
         const val EXTRA_RESULT_QUAD = "extra_result_quad"
         const val EXTRA_RESULT_IMAGE_PATH = "extra_result_image_path"
@@ -45,6 +46,7 @@ class CardCropActivity : AppCompatActivity() {
     private var currentBitmap: Bitmap? = null
     private var currentImagePath: String? = null
     private var isFront: Boolean = true
+    private var isDocumentMode: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +55,7 @@ class CardCropActivity : AppCompatActivity() {
 
         val title = intent.getStringExtra(EXTRA_TITLE) ?: "Crop ID Card"
         isFront = intent.getBooleanExtra(EXTRA_IS_FRONT, true)
+        isDocumentMode = intent.getBooleanExtra(EXTRA_IS_DOCUMENT_MODE, false)
         binding.tvToolbarTitle.text = title
 
         setupListeners()
@@ -97,9 +100,18 @@ class CardCropActivity : AppCompatActivity() {
                 var bmp: Bitmap? = null
                 var finalPath: String? = path
 
-                if (path != null && File(path).exists()) {
+if (path != null && File(path).exists()) {
                     bmp = decodeSampledBitmap(path, 2500, 2500)
-                    bmp = fixOrientation(path, bmp)
+                    val oriented = fixOrientation(path, bmp!!)
+                    if (oriented !== bmp) {
+                        bmp = oriented
+                        // Save the rotated image so the quad coordinates match
+                        val cacheFile = File(cacheDir, "cached_card_${System.currentTimeMillis()}.jpg")
+                        FileOutputStream(cacheFile).use { out ->
+                            oriented.compress(Bitmap.CompressFormat.JPEG, 95, out)
+                        }
+                        finalPath = cacheFile.absolutePath
+                    }
                 } else if (uriStr != null) {
                     val uri = Uri.parse(uriStr)
                     bmp = decodeSampledBitmapFromUri(uri, 2500, 2500)
@@ -188,7 +200,11 @@ class CardCropActivity : AppCompatActivity() {
                 autoWhiteBalance = true,
                 autoFlatField = true
             )
-            val cleaned = engine.processCard(bmp, quad, config, isFront)
+            val cleaned = if (isDocumentMode) {
+                engine.processDocument(bmp, quad, config)
+            } else {
+                engine.processCard(bmp, quad, config, isFront)
+            }
 
             withContext(Dispatchers.Main) {
                 hideLoading()
