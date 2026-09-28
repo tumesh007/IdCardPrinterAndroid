@@ -59,6 +59,47 @@ object A4LayoutComposer {
         return a4
     }
 
+    /**
+     * Composes a single document onto a full A4 page, scaling to fit with margins.
+     */
+    fun composeDocument(documentImage: Bitmap): Bitmap {
+        val a4 = Bitmap.createBitmap(A4_WIDTH_300DPI, A4_HEIGHT_300DPI, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(a4)
+        canvas.drawColor(Color.WHITE)
+
+        val bmpPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+        val borderPaint = Paint().apply {
+            color = Color.rgb(203, 213, 225)
+            style = Paint.Style.STROKE
+            strokeWidth = 2f
+        }
+
+        val padding = 50
+        val targetW = A4_WIDTH_300DPI - padding * 2
+        val targetH = A4_HEIGHT_300DPI - padding * 2
+
+        val imgRatio = documentImage.width.toFloat() / documentImage.height
+        val targetRatio = targetW.toFloat() / targetH
+
+        var drawW = targetW
+        var drawH = targetH
+
+        if (imgRatio > targetRatio) {
+            drawH = (targetW / imgRatio).toInt()
+        } else {
+            drawW = (targetH * imgRatio).toInt()
+        }
+
+        val cardX = (A4_WIDTH_300DPI - drawW) / 2
+        val cardY = (A4_HEIGHT_300DPI - drawH) / 2
+
+        val rect = Rect(cardX, cardY, cardX + drawW, cardY + drawH)
+        canvas.drawBitmap(documentImage, null, rect, bmpPaint)
+        canvas.drawRect(rect, borderPaint)
+
+        return a4
+    }
+
     fun saveAsPng(bitmap: Bitmap, outputFile: File, quality: Int = 100): Boolean {
         return try {
             outputFile.parentFile?.mkdirs()

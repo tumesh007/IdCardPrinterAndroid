@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
+import com.idcardprinter.app.R
 import com.idcardprinter.app.databinding.ActivityMainBinding
 import com.idcardprinter.app.databinding.DialogFullPagePreviewBinding
 import com.idcardprinter.core.IdCardEngine
@@ -44,6 +45,8 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
+
+    private var isDocumentMode = false
 
     private lateinit var binding: ActivityMainBinding
     private val engine = IdCardEngine()
@@ -128,7 +131,21 @@ class MainActivity : AppCompatActivity() {
         updateBackCardUi()
     }
 
+
     private fun setupListeners() {
+        binding.toggleMode.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                isDocumentMode = (checkedId == R.id.btnModeDocument)
+                if (isDocumentMode) {
+                    binding.tvFrontTitle.text = "Document Image"
+                    binding.cardBackSlot.visibility = View.GONE
+                } else {
+                    binding.tvFrontTitle.text = "Front Side (Required)"
+                    binding.cardBackSlot.visibility = View.VISIBLE
+                }
+            }
+        }
+
         // Front slot listeners
         binding.btnFrontCamera.setOnClickListener {
             targetSide = CardSide.FRONT
@@ -336,12 +353,16 @@ class MainActivity : AppCompatActivity() {
         showLoading("Enhancing card...")
         lifecycleScope.launch(Dispatchers.IO) {
             val bmp = BitmapFactory.decodeFile(path) ?: return@launch
-            val cleaned = engine.processCard(
-                bitmap = bmp,
-                quad = quad,
-                config = ProcessingConfig(autoWhiteBalance = true, autoFlatField = true),
-                isFront = side == CardSide.FRONT
-            )
+            val cleaned = if (isDocumentMode) {
+                engine.processDocument(bmp, quad, ProcessingConfig(autoWhiteBalance = true, autoFlatField = true))
+            } else {
+                engine.processCard(
+                    bitmap = bmp,
+                    quad = quad,
+                    config = ProcessingConfig(autoWhiteBalance = true, autoFlatField = true),
+                    isFront = side == CardSide.FRONT
+                )
+            }
             withContext(Dispatchers.Main) {
                 hideLoading()
                 val dialog = Dialog(this@MainActivity)
@@ -382,30 +403,46 @@ class MainActivity : AppCompatActivity() {
         showLoading("Composing 300 DPI A4 Page...")
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // 1. Process Front Card
-                val frontBmp = BitmapFactory.decodeFile(fPath)
-                val frontCleaned = engine.processCard(frontBmp, fQuad, ProcessingConfig(), isFront = true)
-
-                // 2. Process Back Card if provided
-                var backCleaned: Bitmap? = null
-                val bPath = backRawPath
-                val bQuad = backQuad
-                if (bPath != null && bQuad != null) {
-                    val backBmp = BitmapFactory.decodeFile(bPath)
-                    backCleaned = engine.processCard(backBmp, bQuad, ProcessingConfig(), isFront = false)
-                }
-
-                // 3. Compose A4 Bitmap
-                val a4 = engine.composeA4(frontCleaned, backCleaned)
-
-                // 4. Generate PDF
+                val a4: Bitmap
+                val pdfFile: File
+                val pngFile: File
                 val timeTag = System.currentTimeMillis()
-                val pdfFile = File(cacheDir, "id_card_print_$timeTag.pdf")
-                PdfGenerator.generatePdf(a4, pdfFile)
-
-                // 5. Generate PNG
-                val pngFile = File(cacheDir, "id_card_print_$timeTag.png")
-                A4LayoutComposer.saveAsPng(a4, pngFile)
+                
+                if (isDocumentMode) {
+                    val frontBmp = BitmapFactory.decodeFile(fPath)
+                    val frontCleaned = engine.processDocument(frontBmp, fQuad, ProcessingConfig())
+                    a4 = engine.composeDocumentA4(frontCleaned)
+                    
+                    pdfFile = File(cacheDir, "document_print_$timeTag.pdf")
+                    PdfGenerator.generatePdf(a4, pdfFile)
+                    
+                    pngFile = File(cacheDir, "document_print_$timeTag.png")
+                    A4LayoutComposer.saveAsPng(a4, pngFile)
+                } else {
+                    // 1. Process Front Card
+                    val frontBmp = BitmapFactory.decodeFile(fPath)
+                    val frontCleaned = engine.processCard(frontBmp, fQuad, ProcessingConfig(), isFront = true)
+    
+                    // 2. Process Back Card if provided
+                    var backCleaned: Bitmap? = null
+                    val bPath = backRawPath
+                    val bQuad = backQuad
+                    if (bPath != null && bQuad != null) {
+                        val backBmp = BitmapFactory.decodeFile(bPath)
+                        backCleaned = engine.processCard(backBmp, bQuad, ProcessingConfig(), isFront = false)
+                    }
+    
+                    // 3. Compose A4 Bitmap
+                    a4 = engine.composeA4(frontCleaned, backCleaned)
+    
+                    // 4. Generate PDF
+                    pdfFile = File(cacheDir, "id_card_print_$timeTag.pdf")
+                    PdfGenerator.generatePdf(a4, pdfFile)
+    
+                    // 5. Generate PNG
+                    pngFile = File(cacheDir, "id_card_print_$timeTag.png")
+                    A4LayoutComposer.saveAsPng(a4, pngFile)
+                }
 
                 withContext(Dispatchers.Main) {
                     hideLoading()

@@ -97,4 +97,31 @@ class IdCardEngine {
         A4LayoutComposer.saveAsPng(a4Bitmap, outputFile)
         return outputFile
     }
+
+    /**
+     * Convenience pipeline for full documents: Rectifies dynamically and enhances.
+     */
+    fun processDocument(
+        bitmap: Bitmap,
+        quad: CardQuad,
+        config: ProcessingConfig = ProcessingConfig()
+    ): Bitmap {
+        val rectified = PerspectiveWarper.rectifyDynamic(bitmap, quad)
+        return enhanceCard(rectified, config, true)
+    }
+
+    fun composeDocumentA4(documentImage: Bitmap): Bitmap {
+        return A4LayoutComposer.composeDocument(documentImage)
+    }
+
+    fun generateDocumentA4Pdf(documentImage: Bitmap, outputFile: File): File {
+        val a4Bitmap = composeDocumentA4(documentImage)
+        return PdfGenerator.generatePdf(a4Bitmap, outputFile)
+    }
+
+    fun generateDocumentA4Png(documentImage: Bitmap, outputFile: File): File {
+        val a4Bitmap = composeDocumentA4(documentImage)
+        A4LayoutComposer.saveAsPng(a4Bitmap, outputFile)
+        return outputFile
+    }
 }

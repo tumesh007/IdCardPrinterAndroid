@@ -48,4 +48,20 @@ object PerspectiveWarper {
         canvas.drawBitmap(srcBitmap, matrix, paint)
         return output
     }
+
+    /**
+     * Warps the boundary dynamically computing the physical dimensions
+     * based on the euclidean distance of the quad's edges, preserving aspect ratio.
+     */
+    fun rectifyDynamic(srcBitmap: Bitmap, quad: CardQuad): Bitmap {
+        val widthTop = Math.hypot((quad.topRight.x - quad.topLeft.x).toDouble(), (quad.topRight.y - quad.topLeft.y).toDouble())
+        val widthBot = Math.hypot((quad.bottomRight.x - quad.bottomLeft.x).toDouble(), (quad.bottomRight.y - quad.bottomLeft.y).toDouble())
+        val targetWidth = Math.max(widthTop, widthBot).toInt()
+
+        val heightLeft = Math.hypot((quad.bottomLeft.x - quad.topLeft.x).toDouble(), (quad.bottomLeft.y - quad.topLeft.y).toDouble())
+        val heightRight = Math.hypot((quad.bottomRight.x - quad.topRight.x).toDouble(), (quad.bottomRight.y - quad.topRight.y).toDouble())
+        val targetHeight = Math.max(heightLeft, heightRight).toInt()
+
+        return rectify(srcBitmap, quad, targetWidth, targetHeight)
+    }
 }

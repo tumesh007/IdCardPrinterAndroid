@@ -43,6 +43,33 @@
                     android:textSize="13sp" />
             </LinearLayout>
 
+<!-- Mode Selector -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                app:checkedButton="@+id/btnModeIdCard">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnModeIdCard"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ID Card" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnModeDocument"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Full Document" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
             <!-- ================= FRONT CARD SLOT ================= -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -63,6 +90,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/tvFrontTitle"
                         android:text="Front Side (Required)"
                         android:textColor="@color/text_primary"
                         android:textSize="15sp"
@@ -222,6 +250,7 @@
 
             <!-- ================= BACK CARD SLOT (OPTIONAL) ================= -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardBackSlot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
